@@ -45,6 +45,9 @@ void CounterWidget::updateCounter()
     if(m_count < 0){
         m_count = 0;
     }
+    if(m_count == 16){
+        m_count = 0;
+    }
     m_gpio.setPattern(m_count);
     lcdDisplay->display(QString::number(m_count));
 }
