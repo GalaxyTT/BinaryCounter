@@ -14,8 +14,8 @@ CounterWidget::CounterWidget(QWidget *parent)
 
     // QLCDNumber zur Anzeige des Zaehlerstandes dezimal:
 
-    lcdDisplay = new QLCDNumber(2);
-    layout->addWidget(lcdDisplay);
+    m_lcd = new QLCDNumber(2);
+    layout->addWidget(m_lcd);
 
     connect(&m_timer, &QTimer::timeout, this, &CounterWidget::updateCounter);
     m_timer.start(T_UPDATE);
@@ -30,26 +30,13 @@ CounterWidget::~CounterWidget()
 // Zaehlerstand im Widget und dual ueber LEDs anzeigen:
 void CounterWidget::updateCounter()
 {
-    if(m_gpio.isActivated(BUTTONS[0]) == true)
-    {
-        m_count--;
-    }
-    else if (m_gpio.isActivated(BUTTONS[1]) == true)
-    {
-        m_count = 0;
-    }
-    else if (m_gpio.isActivated(BUTTONS[2]) == true)
-    {
-        m_count++;
-    }
-    if(m_count < 0){
-        m_count = 0;
-    }
-    if(m_count == 16){
-        m_count = 0;
-    }
+    if(m_gpio.isActivated(BUTTONS[0]) == true) m_count--;
+    else if (m_gpio.isActivated(BUTTONS[1]) == true) m_count = 0;
+    else if (m_gpio.isActivated(BUTTONS[2]) == true) m_count++;
+    if((m_count < 0) || (m_count == 16)) m_count = 0;
+
     m_gpio.setPattern(m_count);
-    lcdDisplay->display(QString::number(m_count));
+    m_lcd->display(QString::number(m_count));
 }
 
 
